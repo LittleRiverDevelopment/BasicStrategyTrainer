@@ -1,0 +1,135 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-felt-900: #0a3d24;
+  --color-felt-800: #0d4a2c;
+  --color-felt-700: #11603a;
+  --color-gold-400: #e6c25a;
+  --color-gold-500: #d4af37;
+  --font-display: 'Georgia', 'Times New Roman', serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background:
+    radial-gradient(circle at 50% 0%, #11603a 0%, #0a3d24 45%, #062a18 100%) fixed;
+  color: #f5f5f4;
+}
+
+/* The deal animation: cards slide in from the shoe (top-right). */
+@keyframes deal-in {
+  0% {
+    opacity: 0;
+    transform: translate(120px, -160px) rotate(18deg) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes flip-in {
+  0% {
+    transform: rotateY(90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+.animate-deal {
+  animation: deal-in 0.32s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+.animate-pop {
+  animation: pop 0.25s ease-out both;
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-in-out both;
+}
+
+/* Felt table surface */
+.felt {
+  background:
+    radial-gradient(circle at 50% 35%, #15724a 0%, #0d4a2c 55%, #08381f 100%);
+}
+
+/* Custom range slider styling */
+input[type='range'].speed-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--color-gold-500), #f0d978);
+  outline: none;
+}
+
+input[type='range'].speed-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--color-gold-500);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+input[type='range'].speed-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--color-gold-500);
+  cursor: pointer;
+}
