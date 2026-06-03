@@ -4,10 +4,21 @@ interface Props {
   isFinal: boolean;
   /** The true running count, revealed only after the user commits a guess. */
   correct: number;
+  /** Decks still left in the shoe, used to derive the true count. */
+  decksRemaining: number;
   onSubmit: (guess: number) => void;
 }
 
-export function CountCheck({ isFinal, correct, onSubmit }: Props) {
+function fmt(n: number): string {
+  return n > 0 ? `+${n}` : `${n}`;
+}
+
+export function CountCheck({
+  isFinal,
+  correct,
+  decksRemaining,
+  onSubmit,
+}: Props) {
   const [value, setValue] = useState('0');
   const [committed, setCommitted] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -25,6 +36,8 @@ export function CountCheck({ isFinal, correct, onSubmit }: Props) {
   }
 
   const isCorrect = committed === correct;
+  const trueCount =
+    decksRemaining > 0 ? correct / decksRemaining : correct;
 
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
@@ -56,26 +69,58 @@ export function CountCheck({ isFinal, correct, onSubmit }: Props) {
           </>
         ) : (
           <>
-            <div
-              className={`mt-4 text-5xl font-bold ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}`}
-            >
-              {correct > 0 ? `+${correct}` : correct}
+            <div className="mt-4 flex items-stretch justify-center gap-3">
+              <div className="flex-1 rounded-xl bg-black/40 border border-white/10 py-3">
+                <div className="text-[10px] uppercase tracking-widest text-stone-400">
+                  Your count
+                </div>
+                <div className="text-3xl font-bold text-white">
+                  {fmt(committed)}
+                </div>
+              </div>
+              <div
+                className={`flex-1 rounded-xl py-3 border ${
+                  isCorrect
+                    ? 'bg-emerald-500/15 border-emerald-400/40'
+                    : 'bg-rose-500/15 border-rose-400/40'
+                }`}
+              >
+                <div className="text-[10px] uppercase tracking-widest text-stone-300">
+                  Actual count
+                </div>
+                <div
+                  className={`text-3xl font-bold ${isCorrect ? 'text-emerald-300' : 'text-rose-300'}`}
+                >
+                  {fmt(correct)}
+                </div>
+              </div>
             </div>
-            <p className="mt-2 text-sm text-stone-300">
+
+            <p className="mt-3 text-sm">
               {isCorrect ? (
                 <span className="text-emerald-300 font-semibold">
                   Spot on! Your count was exact.
                 </span>
               ) : (
-                <>
-                  You said{' '}
+                <span className="text-stone-300">
+                  Off by{' '}
                   <span className="font-semibold text-white">
-                    {committed > 0 ? `+${committed}` : committed}
-                  </span>{' '}
-                  &mdash; off by {Math.abs(committed - correct)}.
-                </>
+                    {Math.abs(committed - correct)}
+                  </span>
+                  .
+                </span>
               )}
             </p>
+
+            <p className="mt-1 text-xs text-stone-400">
+              True count &asymp;{' '}
+              <span className="text-gold-400 font-semibold">
+                {trueCount > 0 ? '+' : ''}
+                {trueCount.toFixed(1)}
+              </span>{' '}
+              ({fmt(correct)} &divide; {decksRemaining.toFixed(1)} decks left)
+            </p>
+
             <button
               onClick={() => onSubmit(committed)}
               autoFocus

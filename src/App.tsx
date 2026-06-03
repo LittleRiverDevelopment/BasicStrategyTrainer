@@ -59,6 +59,7 @@ export default function App() {
         <CountCheck
           isFinal={state.pendingCheckIsFinal}
           correct={state.runningCount}
+          decksRemaining={(state.shoe.length - state.shoePos) / 52}
           onSubmit={submitCount}
         />
       )}
