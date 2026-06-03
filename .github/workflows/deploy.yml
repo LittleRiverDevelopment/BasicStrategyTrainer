@@ -23,7 +23,10 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
+      # Use `npm install` rather than `npm ci`: the lockfile is generated on
+      # macOS and npm can under-record platform-specific native binaries
+      # (Vite/rolldown, Tailwind oxide), which makes `npm ci` fail on Linux.
+      - run: npm install --no-audit --no-fund
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
